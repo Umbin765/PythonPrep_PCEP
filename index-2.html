@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCEP Python Certification Practice Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #141b3d;
+            --accent-primary: #00ff88;
+            --accent-secondary: #0099ff;
+            --text-primary: #e8edf5;
+            --text-secondary: #8b95b8;
+            --correct: #00ff88;
+            --incorrect: #ff3366;
+            --code-bg: #1a1f3a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 153, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease 0.2s both;
+        }
+
+        .stat-card {
+            flex: 1;
+            max-width: 250px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .score {
+            color: var(--accent-primary);
+        }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s ease 0.4s both;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .question-number {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            line-height: 1.8;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            position: relative;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-block::before {
+            content: 'python';
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        pre {
+            margin: 0;
+            color: #e8edf5;
+        }
+
+        .options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent-secondary);
+            transform: translateX(4px);
+        }
+
+        .option.selected {
+            background: rgba(0, 153, 255, 0.15);
+            border-color: var(--accent-secondary);
+        }
+
+        .option.correct {
+            background: rgba(0, 255, 136, 0.15);
+            border-color: var(--correct);
+            animation: correctPulse 0.6s ease;
+        }
+
+        .option.incorrect {
+            background: rgba(255, 51, 102, 0.15);
+            border-color: var(--incorrect);
+            animation: shake 0.5s ease;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .option-label {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-primary);
+            margin-right: 1rem;
+            font-weight: 700;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: var(--bg-primary);
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-screen {
+            display: none;
+            text-align: center;
+            animation: fadeIn 1s ease;
+        }
+
+        .results-screen.active {
+            display: block;
+        }
+
+        .final-score {
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 2rem 0;
+            animation: scaleIn 0.8s ease;
+        }
+
+        .results-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .quiz-card {
+                padding: 2rem;
+            }
+            
+            .stats-bar {
+                flex-direction: column;
+            }
+            
+            .question-text {
+                font-size: 1.2rem;
+            }
+            
+            .final-score {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PCEP Quiz</h1>
+            <p class="subtitle">Python Certification Practice • 100 Questions</p>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-label">Question</div>
+                <div class="stat-value" id="questionCounter">1/100</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Score</div>
+                <div class="stat-value score" id="score">0</div>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="quiz-card" id="quizCard">
+            <div class="question-header">
+                <span class="question-number" id="questionNumber">Question 1</span>
+            </div>
+            <div class="question-text" id="questionText"></div>
+            <div class="options" id="optionsContainer"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()">Previous</button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+            </div>
+        </div>
+
+        <div class="results-screen" id="resultsScreen">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Quiz Complete! 🎉</h2>
+            <div class="final-score" id="finalScore"></div>
+            <div class="results-details">
+                <div class="result-card">
+                    <div class="stat-label">Correct</div>
+                    <div class="stat-value" style="color: var(--correct);" id="correctCount">0</div>
+                </div>
+                <div class="result-card">
+                    <div class="stat-label">Incorrect</div>
+                    <div class="stat-value" style="color: var(--incorrect);" id="incorrectCount">0</div>
+                </div>
+                <div class="result-card">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value" id="accuracy">0%</div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="restartQuiz()" style="max-width: 300px; margin: 2rem auto;">Restart Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = 5\ny = 2\nprint(x // y)",
+                options: ["A. 2.5", "B. 2", "C. 3", "D. 2.0"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(type(3 / 2))",
+                options: ["A. <class 'int'>", "B. <class 'float'>", "C. <class 'str'>", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "Python"\nprint(x[1:4])',
+                options: ["A. Pyt", "B. yth", "C. ytho", "D. Pyth"],
+                correct: 1
+            },
+            {
+                question: "Which of the following is a valid variable name in Python?",
+                code: null,
+                options: ["A. 2var", "B. var-name", "C. var_name", "D. var.name"],
+                correct: 2
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(bool(0))",
+                options: ["A. True", "B. False", "C. 0", "D. None"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = 10\nx += 5\nprint(x)",
+                options: ["A. 10", "B. 15", "C. 5", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(2 ** 3)",
+                options: ["A. 6", "B. 8", "C. 9", "D. 5"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'print(len("Hello"))',
+                options: ["A. 4", "B. 5", "C. 6", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nprint(x[0])",
+                options: ["A. 1", "B. 2", "C. 3", "D. 0"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nx.append(4)\nprint(len(x))",
+                options: ["A. 3", "B. 4", "C. 5", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'print("Hello" + "World")',
+                options: ["A. Hello World", "B. HelloWorld", "C. Hello+World", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = 5\nif x > 3:\n    print("Yes")\nelse:\n    print("No")',
+                options: ["A. Yes", "B. No", "C. YesNo", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "for i in range(3):\n    print(i)",
+                options: ["A. 1 2 3", "B. 0 1 2", "C. 0 1 2 3", "D. 1 2"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "Python"\nprint(x[-1])',
+                options: ["A. P", "B. n", "C. o", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3, 4, 5]\nprint(x[1:3])",
+                options: ["A. [1, 2]", "B. [2, 3]", "C. [2, 3, 4]", "D. [1, 2, 3]"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(10 % 3)",
+                options: ["A. 3", "B. 1", "C. 0", "D. 3.33"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = True\ny = False\nprint(x and y)",
+                options: ["A. True", "B. False", "C. None", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "123"\nprint(type(x))',
+                options: ["A. <class 'int'>", "B. <class 'float'>", "C. <class 'str'>", "D. <class 'bool'>"],
+                correct: 2
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\ny = x\ny.append(4)\nprint(len(x))",
+                options: ["A. 3", "B. 4", "C. 5", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(int(3.9))",
+                options: ["A. 3", "B. 4", "C. 3.9", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = (1, 2, 3)\nprint(x[1])",
+                options: ["A. 1", "B. 2", "C. 3", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'while True:\n    print("Hello")\n    break',
+                options: ["A. Hello (printed once)", "B. Hello (printed infinitely)", "C. No output", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = {"a": 1, "b": 2}\nprint(len(x))',
+                options: ["A. 1", "B. 2", "C. 3", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nx.insert(1, 5)\nprint(x)",
+                options: ["A. [1, 2, 3, 5]", "B. [1, 5, 2, 3]", "C. [5, 1, 2, 3]", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'print("Python"[0:6:2])',
+                options: ["A. Pto", "B. Pth", "C. Python", "D. Pto"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = 5\nprint(x == 5.0)",
+                options: ["A. True", "B. False", "C. None", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nprint(2 in x)",
+                options: ["A. True", "B. False", "C. 2", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "def func():\n    return 5\nprint(func())",
+                options: ["A. 5", "B. None", "C. func", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "hello"\nprint(x.upper())',
+                options: ["A. hello", "B. HELLO", "C. Hello", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3, 2, 1]\nprint(x.count(2))",
+                options: ["A. 1", "B. 2", "C. 3", "D. 5"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = range(5)\nprint(list(x))",
+                options: ["A. [1, 2, 3, 4, 5]", "B. [0, 1, 2, 3, 4]", "C. [0, 1, 2, 3, 4, 5]", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(not True)",
+                options: ["A. True", "B. False", "C. None", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\ny = x[:]\ny.append(4)\nprint(len(x))",
+                options: ["A. 3", "B. 4", "C. 5", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "Python"\nprint(x.find("th"))',
+                options: ["A. 2", "B. 3", "C. 4", "D. -1"],
+                correct: 2
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = 10\nif x:\n    print("True")\nelse:\n    print("False")',
+                options: ["A. True", "B. False", "C. 10", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nx.remove(2)\nprint(x)",
+                options: ["A. [1, 2, 3]", "B. [1, 3]", "C. [2, 3]", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'print("abc" * 3)',
+                options: ["A. abc3", "B. abcabcabc", "C. abc abc abc", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nprint(x.pop())",
+                options: ["A. 1", "B. 2", "C. 3", "D. [1, 2]"],
+                correct: 2
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = {"a": 1, "b": 2}\nprint("a" in x)',
+                options: ["A. True", "B. False", "C. 1", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = None\nprint(x == None)",
+                options: ["A. True", "B. False", "C. None", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "for i in range(1, 4):\n    if i == 2:\n        continue\n    print(i)",
+                options: ["A. 1 2 3", "B. 1 3", "C. 2", "D. 1 2"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "hello world"\nprint(x.split())',
+                options: ["A. ['hello', 'world']", "B. ['h', 'e', 'l', 'l', 'o', 'w', 'o', 'r', 'l', 'd']", "C. hello world", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = (1,)\nprint(type(x))",
+                options: ["A. <class 'int'>", "B. <class 'tuple'>", "C. <class 'list'>", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(5 > 3 and 2 < 1)",
+                options: ["A. True", "B. False", "C. None", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nx.clear()\nprint(x)",
+                options: ["A. [1, 2, 3]", "B. []", "C. None", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(abs(-5))",
+                options: ["A. -5", "B. 5", "C. 0", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [3, 1, 2]\nx.sort()\nprint(x)",
+                options: ["A. [3, 1, 2]", "B. [1, 2, 3]", "C. [3, 2, 1]", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "Python"\nprint(x.replace("P", "J"))',
+                options: ["A. Python", "B. Jython", "C. python", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3, 4, 5]\nprint(x[-2])",
+                options: ["A. 3", "B. 4", "C. 5", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "def func(a, b=5):\n    return a + b\nprint(func(3))",
+                options: ["A. 3", "B. 5", "C. 8", "D. The code is erroneous"],
+                correct: 2
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nprint(max(x))",
+                options: ["A. 1", "B. 2", "C. 3", "D. 6"],
+                correct: 2
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "123"\nprint(int(x) + 1)',
+                options: ["A. 123", "B. 124", "C. 1231", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\ny = [4, 5]\nprint(x + y)",
+                options: ["A. [1, 2, 3, 4, 5]", "B. [5, 7]", "C. [1, 2, 3, [4, 5]]", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(bool([]))",
+                options: ["A. True", "B. False", "C. []", "D. None"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = {1, 2, 3, 2, 1}\nprint(len(x))",
+                options: ["A. 2", "B. 3", "C. 5", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "Python"\nprint(x[::2])',
+                options: ["A. Pto", "B. Pth", "C. Pto", "D. Phn"],
+                correct: 3
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\ndel x[1]\nprint(x)",
+                options: ["A. [1, 2, 3]", "B. [1, 3]", "C. [2, 3]", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(5 / 0)",
+                options: ["A. 0", "B. Infinity", "C. The code causes a ZeroDivisionError", "D. None"],
+                correct: 2
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "hello"\nprint(x.isalpha())',
+                options: ["A. True", "B. False", "C. None", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\ny = x * 2\nprint(y)",
+                options: ["A. [2, 4, 6]", "B. [1, 2, 3, 1, 2, 3]", "C. [1, 2, 3, 2]", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(type([]))",
+                options: ["A. <class 'tuple'>", "B. <class 'list'>", "C. <class 'dict'>", "D. <class 'set'>"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "Python"\nprint(len(x[1:4]))',
+                options: ["A. 2", "B. 3", "C. 4", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = {"name": "Alice", "age": 25}\nprint(x["name"])',
+                options: ["A. name", "B. Alice", "C. 25", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "for i in range(5):\n    if i == 3:\n        break\n    print(i)",
+                options: ["A. 0 1 2", "B. 0 1 2 3", "C. 0 1 2 3 4", "D. 1 2 3"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nx.reverse()\nprint(x)",
+                options: ["A. [1, 2, 3]", "B. [3, 2, 1]", "C. [3, 1, 2]", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(round(3.7))",
+                options: ["A. 3", "B. 4", "C. 3.7", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "Python"\nprint("P" in x)',
+                options: ["A. True", "B. False", "C. P", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nprint(x.index(2))",
+                options: ["A. 0", "B. 1", "C. 2", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = 5\nx *= 2\nprint(x)",
+                options: ["A. 5", "B. 7", "C. 10", "D. The code is erroneous"],
+                correct: 2
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(min([3, 1, 2]))",
+                options: ["A. 1", "B. 2", "C. 3", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "HELLO"\nprint(x.lower())',
+                options: ["A. HELLO", "B. hello", "C. Hello", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2]\nx.extend([3, 4])\nprint(x)",
+                options: ["A. [1, 2, [3, 4]]", "B. [1, 2, 3, 4]", "C. [1, 2]", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(str(123))",
+                options: ["A. 123", "B. '123'", "C. Both A and B (string '123')", "D. The code is erroneous"],
+                correct: 2
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = True or False\nprint(x)",
+                options: ["A. True", "B. False", "C. None", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3, 4]\nprint(x[1:])",
+                options: ["A. [1]", "B. [2, 3, 4]", "C. [1, 2, 3]", "D. [2]"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "abc"\nprint(x.isdigit())',
+                options: ["A. True", "B. False", "C. None", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nprint(sum(x))",
+                options: ["A. 123", "B. 6", "C. [1, 2, 3]", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'print(float("3.5"))',
+                options: ["A. 3", "B. 3.5", "C. '3.5'", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\ny = tuple(x)\nprint(type(y))",
+                options: ["A. <class 'list'>", "B. <class 'tuple'>", "C. <class 'set'>", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = 10\ny = 20\nx, y = y, x\nprint(x)",
+                options: ["A. 10", "B. 20", "C. 30", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "  hello  "\nprint(x.strip())',
+                options: ["A. '  hello  '", "B. 'hello'", "C. ' hello '", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(3 < 5 < 7)",
+                options: ["A. True", "B. False", "C. None", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nprint(x[::-1])",
+                options: ["A. [1, 2, 3]", "B. [3, 2, 1]", "C. [2, 1]", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "def func():\n    pass\nprint(func())",
+                options: ["A. 0", "B. None", "C. pass", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nprint(3 in x)",
+                options: ["A. True", "B. False", "C. 3", "D. None"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(pow(2, 3))",
+                options: ["A. 5", "B. 6", "C. 8", "D. 9"],
+                correct: 2
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "Python"\nprint(x.startswith("Py"))',
+                options: ["A. True", "B. False", "C. Py", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = {1: "a", 2: "b"}\nprint(x.get(3, "default"))',
+                options: ["A. None", "B. 3", "C. 'default'", "D. The code is erroneous"],
+                correct: 2
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3, 4, 5]\nprint(x[::2])",
+                options: ["A. [1, 2, 3, 4, 5]", "B. [1, 3, 5]", "C. [2, 4]", "D. [1, 2]"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "hello"\nprint(x.capitalize())',
+                options: ["A. hello", "B. Hello", "C. HELLO", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\ny = list(x)\ny[0] = 5\nprint(x[0])",
+                options: ["A. 1", "B. 5", "C. [1, 2, 3]", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "print(chr(65))",
+                options: ["A. 65", "B. A", "C. a", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nprint(1 not in x)",
+                options: ["A. True", "B. False", "C. None", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "hello world"\nprint(x.count("l"))',
+                options: ["A. 2", "B. 3", "C. 4", "D. 1"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\nprint(len(x) > 2)",
+                options: ["A. True", "B. False", "C. 3", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'print(ord("A"))',
+                options: ["A. A", "B. 65", "C. 97", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "123"\ny = "456"\nprint(x + y)',
+                options: ["A. 579", "B. '123456'", "C. 123456", "D. The code is erroneous"],
+                correct: 1
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3, 4, 5]\nprint(x[-1:-4:-1])",
+                options: ["A. [5, 4, 3]", "B. [5, 4, 3, 2]", "C. [4, 3, 2]", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: 'x = "Python"\nprint(x.endswith("on"))',
+                options: ["A. True", "B. False", "C. on", "D. The code is erroneous"],
+                correct: 0
+            },
+            {
+                question: "What is the expected output of the following code?",
+                code: "x = [1, 2, 3]\ny = x\nx = [4, 5, 6]\nprint(y)",
+                options: ["A. [1, 2, 3]", "B. [4, 5, 6]", "C. []", "D. The code is erroneous"],
+                correct: 0
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+        let userAnswers = [];
+
+        function loadQuestion() {
+            answered = false;
+
+            const q = questions[currentQuestion];
+            document.getElementById('questionNumber').textContent = `Question ${currentQuestion + 1}`;
+            document.getElementById('questionCounter').textContent = `${currentQuestion + 1}/100`;
+            document.getElementById('questionText').innerHTML = q.question;
+
+            if (q.code) {
+                document.getElementById('questionText').innerHTML += `
+                    <div class="code-block">
+                        <pre>${q.code}</pre>
+                    </div>
+                `;
+            }
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.innerHTML = `<span class="option-label">${option.charAt(0)}.</span>${option.substring(3)}`;
+                optionDiv.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            updateProgress();
+            updateButtons();
+        }
+
+        function selectOption(index) {
+            if (answered) return;
+
+            answered = true;
+
+            const options = document.querySelectorAll('.option');
+            const q = questions[currentQuestion];
+            
+            userAnswers[currentQuestion] = index;
+
+            options.forEach((option, i) => {
+                option.classList.add('disabled');
+                if (i === q.correct) {
+                    option.classList.add('correct');
+                }
+                if (i === index && i !== q.correct) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            if (index === q.correct) {
+                score++;
+                document.getElementById('score').textContent = score;
+            }
+
+            updateButtons();
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').disabled = !answered;
+            
+            if (currentQuestion === questions.length - 1 && answered) {
+                document.getElementById('nextBtn').textContent = 'Show Results';
+            } else {
+                document.getElementById('nextBtn').textContent = 'Next Question';
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizCard').style.display = 'none';
+            document.getElementById('resultsScreen').classList.add('active');
+            
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('finalScore').textContent = `${percentage}%`;
+            document.getElementById('correctCount').textContent = score;
+            document.getElementById('incorrectCount').textContent = questions.length - score;
+            document.getElementById('accuracy').textContent = `${percentage}%`;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = [];
+            document.getElementById('score').textContent = '0';
+            document.getElementById('quizCard').style.display = 'block';
+            document.getElementById('resultsScreen').classList.remove('active');
+            loadQuestion();
+        }
+
+        // Initialize quiz
+        loadQuestion();
+    </script>
+</body>
+</html>
